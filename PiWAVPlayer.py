@@ -6,7 +6,7 @@ import logging
 import time
 import wave
 from ctypes import CFUNCTYPE, c_char_p, c_int, cdll
-from typing import Optional, Tuple, Mapping
+from typing import Optional, Tuple, Mapping, Union
 
 import numpy as np
 import pyaudio
@@ -64,22 +64,22 @@ class PiWAVPlayer:
 
     def audio_stream_callback(
         self,
-        _in_data: bytes | None,
+        _in_data: Union[int, None],
         frame_count: int,
         _time_info: Mapping[str, float],
         _status: int,
-    ) -> Tuple[bytes | None, int]:
+    ) -> Tuple[Union[int, None], int]:
         '''
         Callback function for playback using PyAudio.
 
         Args:
-            _in_data (bytes | None): Input data from previous buffer.
+            _in_data (Union[int, None]): Input data from previous buffer.
             frame_count (int): Number of frames to process.
             _time_info (Mapping[str, float]): Time information passed by ASound.
             _status (int): Status code passed by ASound.
 
         Returns:
-            Tuple[bytes | None, int]: Data to send back and type of data requested.
+            Tuple[Union[int, None], int]: Data to send back and type of data requested.
         '''
         if self._filestream:
             start_pos = self._position
